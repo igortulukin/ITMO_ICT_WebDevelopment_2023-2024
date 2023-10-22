@@ -1,12 +1,18 @@
 from django.db import models
 from datetime import datetime
+from django.contrib.auth.models import User
 
 
 class Owner(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, default=0)
     id = models.AutoField(primary_key=True)
     last_name = models.CharField(default='None', max_length=30)
     first_name = models.CharField(default='None',max_length=30)
+    passport_number = models.CharField(default='------', max_length=8)
+    home_address = models.CharField(default='------', max_length=50)
+    nationality = models.CharField(default='------', max_length=20)
     birthday = models.DateTimeField(default=datetime.now(), blank=True)
+
 
 
 class Car(models.Model):

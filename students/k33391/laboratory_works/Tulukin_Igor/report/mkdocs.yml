@@ -1,0 +1,21 @@
+site_name: Отчеты по лабораторным работам. Тюлюкин Игорь К33391
+nav:
+ - Home: index.md
+ - Лабораторная №1:
+     - "Задание 1": Lab1/Task1.md
+     - "Задание 2": Lab1/Task2.md
+     - "Задание 3": Lab1/Task3.md
+     - "Задание 4": Lab1/Task4.md
+     - "Задание 5": Lab1/Task5.md
+theme:
+  name: material
+  features:
+    - content.code.annotate
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences

@@ -1,0 +1,34 @@
+
+        </tbody>
+    </table>
+    <h2>Добавить дисциплину и оценку</h2>
+    <form id="add-form" onsubmit="event.preventDefault(); submitFormFetch()">
+        <label>Дисциплина:</label>
+        <input type="text" id="discipline" required><br>
+        <label>Оценка:</label>
+        <input type="number" id="grade" min="1" max="5" required><br>
+        <input type="submit" value="Добавить">
+    </form>
+
+    <script>
+        function submitFormFetch(event) {
+         let name = document.getElementById('discipline').value
+            let grade = document.getElementById('grade').value
+            console.log(name, grade)
+            let body = {
+                   discipline: name,
+                   grade: grade
+               }
+
+         fetch('http://localhost:9090', {
+               method: "POST",
+             body: JSON.stringify(body)
+            })
+            .catch((err) => {
+               alert(err);
+            }).then(() => location.reload())
+
+      }
+    </script>
+</body>
+</html>

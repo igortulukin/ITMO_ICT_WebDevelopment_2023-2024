@@ -16,9 +16,8 @@ while True:
     if len(sides) != 2:
         conn.send(b'Wrong number of sides')
     else:
-        side = math.sqrt(sides[0]**2 + sides[1]**2)
+        side = math.sqrt(sides[0] ** 2 + sides[1] ** 2)
         conn.send(bytes(str(side), 'utf-8'))
     print(data.decode("utf-8"))
-
 
 conn.close()

@@ -1,0 +1,32 @@
+{% extends 'base.html' %} {% block content %}
+
+<h2 class="mb-4">Your tickets</h2>
+<table class="table table-bordered">
+    <thead class="thead-light">
+    <tr>
+        <th scope="col">Seat</th>
+        <th scope="col">Ticket</th>
+        <th scope="col">Flight</th>
+        <th scope="col">FlightLink</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for ticket in tickets %}
+    <tr>
+        <td>{{ ticket.seat}}</td>
+        <td>{{ ticket.number}}</td>
+        <td>
+            <div>Flight number: {{ ticket.seat.flight.flight_number }}</div>
+            <div>Airline: {{ ticket.seat.flight.air_line }}</div>
+            <div>Destination: {{ ticket.seat.flight.destination }}</div>
+            <div>Time: {{ ticket.seat.flight.time }}</div>
+            <div>Gate: {{ ticket.flight.gate }}</div>
+        </td>
+        <td><a href="{% url 'flight_detail' ticket.seat.flight.id %}" class="btn btn-primary">More</a></td>
+        <td><a href="{% url 'ticket_update' ticket.id %}" class="btn btn-primary">Change</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

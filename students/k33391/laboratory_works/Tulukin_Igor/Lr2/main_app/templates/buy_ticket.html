@@ -1,0 +1,25 @@
+{% extends 'base.html' %} {% block content %}
+<h2>Seats</h2>
+<table class="table table-striped table-hover mb-5">
+    {% for seat in seats %}
+    <td class="text-center">
+        {% if seat.is_taken %} <s style="color:grey;">{{seat.name}}</s>
+        {% else %} {{seat.name}}
+        {% endif %}
+    </td>
+    {% endfor %}
+</table>
+
+<div class="row">
+    <div class="col-md-3">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="ticketSeatInput" class="form-label">Seat: </label>
+                <input name='seat' class="form-control" id="ticketSeatInput">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+{%endblock%}

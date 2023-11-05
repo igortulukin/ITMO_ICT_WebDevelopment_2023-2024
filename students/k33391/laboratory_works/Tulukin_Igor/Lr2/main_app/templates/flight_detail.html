@@ -1,0 +1,91 @@
+{% extends 'base.html' %} {% block content %}
+
+<h1>Flight {{flight.name}}</h1>
+
+<br>
+
+<h2 class="mb-3">Information about flight</h2>
+<div>Type: {{ flight.type }}</div>
+<div>Flight number: {{ flight.flight_number }}</div>
+<div>Airline: {{ flight.air_line }}</div>
+<div>Destination: {{ flight.destination }}</div>
+<div>Time: {{ flight.time }}</div>
+<div>Gate: {{ flight.gate }}</div>
+
+<br>
+<br>
+
+<h2>Passengers already registered</h2>
+<div class="mb-4">
+    {% if tickets|length > 0 %}
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Username</th>
+            <th scope="col">Seat</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for ticket in tickets %}
+        <tr>
+            <td class="align-middle">{{ticket.passenger.username}}</td>
+            <td class="align-middle">{{ticket.seat}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+        {%else%}
+        All seats are free now.
+    {% endif %}
+        <br>
+        <br>
+</div>
+
+{% if user.is_authenticated %}
+<h3> You can buy a ticket <a href="{% url 'buy_ticket' flight.id%}"> here</a><h3>
+    <div>
+        {% if has_ticket%}
+        <td>You already have a<a href="{% url 'tickets_for_user'%}" > ticket</a> on these flight</td>
+        {% endif %}
+        {%else%}
+        If you want to buy a ticket, you should be <a href="{% url 'register' %}"> registered</a>
+        {%endif%}
+        <br>
+        <br>
+    </div>
+
+
+<h2 class="my-3">Comments</h2>
+
+{% if comments|length  > 0 %}
+<ul class="list-group">
+    {% for comment in comments %}
+    <li class="list-group-item">
+        <strong>{{ comment.writer.username }}</strong>
+        <br>
+        Rating: {{ comment.rating }}
+        <br>
+        {{ comment.message }}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+No comments were left
+<br>
+<br>
+{% endif%}
+
+{% if user.is_authenticated %}
+
+<h5 class="my-3">Add comment</h5>
+<form method="post" class="mb-5">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <button type="submit" class="btn btn-primary">Add</button>
+</form>
+{% endif%}
+
+
+{% endblock %}
+

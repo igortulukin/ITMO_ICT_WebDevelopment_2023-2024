@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class Floor(models.Model):
     name = models.CharField(max_length=500)
 
@@ -12,6 +11,8 @@ class Room(models.Model):
     num = models.CharField(max_length=10)
     type = models.CharField(max_length=10, choices=(("1", "1"), ("2", "2"), ("3", "3")))
     cost = models.FloatField()
+    floor = models.ForeignKey("system.Floor", related_name="rooms_on", on_delete=models.CASCADE,
+                              null=True, blank=True)
     telephone = models.CharField(max_length=15)
 
 

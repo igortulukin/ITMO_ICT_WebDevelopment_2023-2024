@@ -17,7 +17,7 @@ class MyHTTPServer:
             self.serve_client(client_socket)
 
     def serve_client(self, client_socket):
-        data = client_socket.recv(1024).decode('UTF-8')
+        data = client_socket.recv(4096).decode('UTF-8')
         try:
             response = self.parse_request(data)
             if response:
@@ -57,7 +57,10 @@ class MyHTTPServer:
 
     def handle_post(self, body):
         body = json.loads(body)
-        self.grades[body['discipline']] = body['grade']
+        if body['discipline'] in self.grades:
+            self.grades[body['discipline']] += ', ' + body['grade']
+        else:
+            self.grades[body['discipline']] = body['grade']
         response = "HTTP/1.1 200 OK\n\n"
         response = response.encode('UTF-8')
         return response

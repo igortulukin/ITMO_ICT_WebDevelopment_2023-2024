@@ -54,3 +54,10 @@ class CleaningSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cleaning
         fields = "__all__"
+
+class ShowCleaningSerializer(serializers.ModelSerializer):
+    clearer = WorkerSerializer()
+    floor = FloorSerializer()
+    class Meta:
+        model = Cleaning
+        fields = ['id', 'day_of_week', 'clearer', 'floor']

@@ -21,14 +21,12 @@ class VisiterViewSet(ModelViewSet):
 
 class LivingViewSet(ModelViewSet):
     queryset = Living.objects.all()
-    serializer_class = serializers.LivingSerializer
 
     def get_permissions(self):
-        if self.action in SAFE_METHODS:
+        if self.action in ['list', 'retrieve']:
             return [IsAuthenticated()]
         else:
             return [IsAdminUser()]
-
 
     def get_serializer_class(self):
         if self.action == "get_visiters_from":
@@ -36,16 +34,15 @@ class LivingViewSet(ModelViewSet):
         if self.action == "who_cleans":
             return serializers.DayOfTheWeekSerializer
         else:
-            return serializers.VisiterSerializer
+            return serializers.LivingSerializer
 
     @action(detail=False, methods=["Post"])
     def get_visiters_from(self, request):
-        obj = self.get_object()
         city = request.data.get("name", None)
         if city:
             vis = Visiter.objects.filter(fr__name=city)
             ser = serializers.VisiterSerializer(vis, many=True)
-            return Response(ser.data, status=status.HTTP_200_OK)
+            return Response(ser.data)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=["Post"])
@@ -53,9 +50,9 @@ class LivingViewSet(ModelViewSet):
         obj = self.get_object()
         day = request.data.get("day", None)
         if day:
-            room = Room.objects.filter(living_who__in=Living.objects.filter(visiter=obj.id))
-            cleaning = Cleaning.objects.filter(room=room.id, day_of_week=day)
-            ser = serializers.CleaningSerializer(cleaning)
+            rooms = Room.objects.filter(living_who__in=Living.objects.filter(visiter=obj.id)).distinct()
+            cleaning = Cleaning.objects.filter(floor__rooms_on__in=rooms, day_of_week=day).distinct()
+            ser = serializers.CleaningSerializer(cleaning, many=True)
             return Response(ser.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -70,7 +67,7 @@ class RoomViewSet(ModelViewSet):
             return [IsAdminUser()]
 
     def get_serializer_class(self):
-        if self.action == "get_living_by_date":
+        if self.action in ["get_living_by_date"]:
             return serializers.DateSerializer
         else:
             return serializers.RoomSerializer
@@ -88,11 +85,12 @@ class RoomViewSet(ModelViewSet):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=["GET"])
-    def get_living_by_date(self, request):
+    def get_livings_now(self, request):
         qs = Room.objects.none()
 
+        l_qs = Living.objects.filter(date_start__lte=datetime.date.today(), date_end__gte=datetime.date.today())
         for obj in Room.objects.all():
-            if not Living.objects.filter(room=obj.id, date_start__lt=datetime.date.today(), date_end__gt=datetime.date.today()):
+            if l_qs.filter(room=obj.id).exists():
                 qs |= Room.objects.filter(id=obj.id)
 
         ser = serializers.RoomSerializer(qs, many=True)
@@ -124,7 +122,11 @@ class WorkerViewSet(ModelViewSet):
 
 class CleaningViewSet(ModelViewSet):
     queryset = Cleaning.objects.all()
-    serializer_class = serializers.CleaningSerializer
+
+    def get_serializer_class(self):
+       if self.action in ['list', 'retrieve']:
+           return serializers.ShowCleaningSerializer
+       return serializers.CleaningSerializer
 
     def get_permissions(self):
         if self.action in SAFE_METHODS:

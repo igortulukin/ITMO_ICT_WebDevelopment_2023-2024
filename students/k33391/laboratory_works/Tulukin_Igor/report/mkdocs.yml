@@ -13,6 +13,19 @@ nav:
      - "Models.py": Lab2/models.md
      - "Urls.py": Lab2/urls.md
      - "Templates": Lab2/templates.md
+ - Практика №3:
+     - "Практическое задание": Practise3/report.md
+ - Лабораторная №3:
+     - "Описание": Lab3/preview.md
+     - "Views.py": Lab3/views.md
+     - "Models.py": Lab3/models.md
+     - "Urls.py": Lab3/urls.md
+     - "Serializers.py": Lab3/serializers.md
+ - Лабораторная №4:
+     - "Описание": Lab4/preview.md
+     - "main.ts": Lab4/app.md
+     - "router.ts": Lab4/router.md
+     - "EditingProgram.vue": Lab4/EditingProgram.md
 theme:
   name: material
   features:
